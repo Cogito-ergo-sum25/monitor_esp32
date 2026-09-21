@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESP32 Desk Dashboard - Control Hub</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-logo">
+          <span class="logo-core"></span>
+          <span class="logo-ring"></span>
+        </div>
+        <div>
+          <h1>ESP32 DESK DASHBOARD</h1>
+          <p class="subtitle">Open Source Modular Hardware Monitor</p>
+        </div>
+      </div>
+      <div class="header-status">
+        <div class="status-badge" id="device-status-badge">
+          <span class="pulse-dot" id="status-dot"></span>
+          <span id="status-text">Buscando dispositivo...</span>
+        </div>
+        <div class="port-tag" id="current-port">/dev/ttyACM0</div>
+      </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="dashboard-grid">
+      <!-- Columna Izquierda: Espejo Virtual de la Pantalla Física -->
+      <section class="panel-section mirror-section">
+        <div class="section-title">
+          <h2>ESPEJO VIRTUAL EN VIVO</h2>
+          <span class="badge-pill">2.8″ TFT (320×240)</span>
+        </div>
+        <p class="section-desc">Visualización exacta y en tiempo real de lo que se muestra en la pantalla del ESP32.</p>
+
+        <!-- Mockup físico del TFT -->
+        <div class="device-mockup">
+          <div class="screen-bezel">
+            <div class="tft-display" id="tft-screen">
+              <!-- Fila Superior: Tarjetas de Métricas -->
+              <div class="tft-row-metrics">
+                <!-- Tarjeta CPU -->
+                <div class="tft-card" id="tft-card-cpu">
+                  <div class="tft-card-header">
+                    <span class="tft-label label-cpu">CPU</span>
+                    <span class="tft-dot" id="tft-dot-cpu"></span>
+                  </div>
+                  <div class="tft-val" id="tft-cpu-usage">--%</div>
+                  <div class="tft-prog-track">
+                    <div class="tft-prog-fill bar-cpu" id="tft-cpu-bar" style="width: 0%"></div>
+                  </div>
+                  <div class="tft-sub" id="tft-cpu-temp">-- °C</div>
+                  <div class="tft-footer">Ryzen AMD</div>
+                </div>
+
+                <!-- Tarjeta GPU -->
+                <div class="tft-card" id="tft-card-gpu">
+                  <div class="tft-card-header">
+                    <span class="tft-label label-gpu">GPU</span>
+                    <span class="tft-dot" id="tft-dot-gpu"></span>
+                  </div>
+                  <div class="tft-val" id="tft-gpu-usage">--%</div>
+                  <div class="tft-prog-track">
+                    <div class="tft-prog-fill bar-gpu" id="tft-gpu-bar" style="width: 0%"></div>
+                  </div>
+                  <div class="tft-sub" id="tft-gpu-temp">-- °C</div>
+                  <div class="tft-footer" id="tft-vram-text">--/--G VRAM</div>
+                </div>
+
+                <!-- Tarjeta RAM -->
+                <div class="tft-card" id="tft-card-ram">
+                  <div class="tft-card-header">
+                    <span class="tft-label label-ram">RAM</span>
+                    <span class="tft-dot" id="tft-dot-ram"></span>
+                  </div>
+                  <div class="tft-val" id="tft-ram-usage">--%</div>
+                  <div class="tft-prog-track">
+                    <div class="tft-prog-fill bar-ram" id="tft-ram-bar" style="width: 0%"></div>
+                  </div>
+                  <div class="tft-sub" id="tft-ram-used">-- GB</div>
+                  <div class="tft-footer" id="tft-ram-total">de -- GB</div>
+                </div>
+              </div>
+
+              <!-- Fila Inferior: Widget de Spotify -->
+              <div class="tft-spotify-widget">
+                <div class="tft-spotify-header">
+                  <span class="tft-spotify-tag">● SPOTIFY</span>
+                  <span class="tft-spotify-badge" id="tft-spotify-status">PLAYING</span>
+                </div>
+                <div class="tft-song-title" id="tft-song-title">Starboy</div>
+                <div class="tft-song-artist" id="tft-song-artist">The Weeknd, Daft Punk</div>
+                <div class="tft-spotify-progress">
+                  <span class="tft-time" id="tft-cur-time">01:23</span>
+                  <div class="tft-time-track">
+                    <div class="tft-time-fill" id="tft-song-bar" style="width: 35%"></div>
+                  </div>
+                  <span class="tft-time" id="tft-tot-time">03:50</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Pines y serigrafía decorativa del módulo -->
+          <div class="pcb-details">
+            <span class="pcb-text">ST7789 2.8" SPI (240x320)</span>
+            <span class="pcb-pins">GND • VCC • SCL • SDA • RST • DC • CS • BL</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Columna Derecha: Configuración y Módulos -->
+      <section class="panel-section controls-section">
+        <!-- Tarjeta de Conexión Serial -->
+        <div class="card-glass">
+          <div class="card-glass-header">
+            <h3>Dispositivo & Puerto Serial</h3>
+            <button class="btn-icon" id="btn-refresh-ports" title="Escanear puertos">🔄</button>
+          </div>
+          <div class="form-group">
+            <label for="port-select">Puerto Seleccionado:</label>
+            <select id="port-select" class="form-select">
+              <option value="">Detectando automáticamente...</option>
+            </select>
+          </div>
+          <div class="stats-row">
+            <div class="mini-stat">
+              <span class="stat-label">Baud Rate</span>
+              <span class="stat-val">115200</span>
+            </div>
+            <div class="mini-stat">
+              <span class="stat-label">Actualización</span>
+              <span class="stat-val" id="stat-interval">1000 ms</span>
+            </div>
+            <div class="mini-stat">
+              <span class="stat-label">Paquetes TX</span>
+              <span class="stat-val" id="stat-tx-count">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Métricas Extendidas de la PC -->
+        <div class="card-glass">
+          <h3>Métricas Detalladas de la PC</h3>
+          <div class="metrics-grid">
+            <div class="metric-box box-cpu">
+              <div class="metric-top">
+                <span class="metric-title">Procesador</span>
+                <span class="metric-temp" id="ext-cpu-temp">--°C</span>
+              </div>
+              <div class="metric-number" id="ext-cpu-usage">--%</div>
+              <div class="prog-bar"><div class="prog-fill fill-cpu" id="ext-cpu-bar"></div></div>
+            </div>
+
+            <div class="metric-box box-gpu">
+              <div class="metric-top">
+                <span class="metric-title">Tarjeta Gráfica</span>
+                <span class="metric-temp" id="ext-gpu-temp">--°C</span>
+              </div>
+              <div class="metric-number" id="ext-gpu-usage">--%</div>
+              <div class="prog-bar"><div class="prog-fill fill-gpu" id="ext-gpu-bar"></div></div>
+              <div class="vram-info" id="ext-gpu-vram">VRAM: -- / -- GB</div>
+            </div>
+
+            <div class="metric-box box-ram">
+              <div class="metric-top">
+                <span class="metric-title">Memoria RAM</span>
+                <span class="metric-temp" id="ext-ram-used">-- GB</span>
+              </div>
+              <div class="metric-number" id="ext-ram-usage">--%</div>
+              <div class="prog-bar"><div class="prog-fill fill-ram" id="ext-ram-bar"></div></div>
+              <div class="vram-info" id="ext-ram-total">Total: -- GB</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Módulo Spotify / Media -->
+        <div class="card-glass spotify-hub">
+          <div class="card-glass-header">
+            <h3>Spotify Hub (Fase Próxima)</h3>
+            <span class="badge-spotify">API LISTA</span>
+          </div>
+          <p class="hint-text">El servicio host en Go puede leer automáticamente la canción que suena en tu PC y enviarla al ESP32.</p>
+          <div class="spotify-controls">
+            <button class="btn-spotify" id="btn-spotify-connect">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+              Conectar Cuenta de Spotify
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

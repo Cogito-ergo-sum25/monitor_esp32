@@ -1,0 +1,611 @@
+:root {
+  --bg-main: #0a0d14;
+  --bg-card: rgba(22, 27, 34, 0.75);
+  --border-color: rgba(48, 54, 61, 0.65);
+  --text-primary: #f0f6fc;
+  --text-muted: #8b949e;
+  
+  /* Colores oficiales de las métricas */
+  --accent-cpu: #00f0ff;
+  --accent-gpu: #ff7b00;
+  --accent-ram: #00ff88;
+  --accent-spotify: #1db954;
+  --accent-danger: #f85149;
+  
+  /* TFT Specific */
+  --tft-bg: #0d1117;
+  --tft-card: #161b22;
+  --tft-border: #30363d;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(255, 123, 0, 0.04) 0%, transparent 40%);
+}
+
+.app-container {
+  width: 100%;
+  max-width: 1240px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  padding: 16px 24px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.brand-logo {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-core {
+  width: 14px;
+  height: 14px;
+  background: var(--accent-cpu);
+  border-radius: 4px;
+  box-shadow: 0 0 12px var(--accent-cpu);
+}
+
+.logo-ring {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border: 2px dashed rgba(0, 240, 255, 0.4);
+  border-radius: 50%;
+  animation: spin 12s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+.brand h1 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  font-size: 0.85rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.pulse-dot {
+  width: 10px;
+  height: 10px;
+  background-color: var(--accent-danger);
+  border-radius: 50%;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.pulse-dot.connected {
+  background-color: var(--accent-ram);
+  box-shadow: 0 0 10px var(--accent-ram);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(0, 255, 136, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+}
+
+.port-tag {
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--accent-cpu);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 960px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-title h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.badge-pill {
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+}
+
+.section-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Mockup de la Pantalla Física */
+.device-mockup {
+  background: #040608;
+  border: 4px solid #1f242c;
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.screen-bezel {
+  background: #0b0e14;
+  border: 8px solid #161a22;
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+}
+
+/* Resolución Física Exacta: 320x240 px */
+.tft-display {
+  width: 320px;
+  height: 240px;
+  background-color: var(--tft-bg);
+  border-radius: 4px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  user-select: none;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.9);
+}
+
+/* Fila Superior de Tarjetas TFT */
+.tft-row-metrics {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  height: 116px;
+}
+
+.tft-card {
+  width: 98px;
+  background: var(--tft-card);
+  border: 1px solid var(--tft-border);
+  border-radius: 6px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.tft-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tft-label {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.label-cpu { color: var(--accent-cpu); }
+.label-gpu { color: var(--accent-gpu); }
+.label-ram { color: var(--accent-ram); }
+
+.tft-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.tft-val {
+  font-size: 20px;
+  font-weight: 800;
+  text-align: center;
+  color: #fff;
+  margin: 2px 0;
+}
+
+.tft-prog-track {
+  height: 5px;
+  background: var(--tft-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.tft-prog-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.bar-cpu { background: var(--accent-cpu); }
+.bar-gpu { background: var(--accent-gpu); }
+.bar-ram { background: var(--accent-ram); }
+
+.tft-sub {
+  font-size: 11px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+.tft-footer {
+  font-size: 8px;
+  text-align: center;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Widget Spotify TFT */
+.tft-spotify-widget {
+  height: 106px;
+  background: var(--tft-card);
+  border: 1px solid var(--tft-border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.tft-spotify-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tft-spotify-tag {
+  color: var(--accent-spotify);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.tft-spotify-badge {
+  color: var(--accent-spotify);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.tft-song-title {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tft-song-artist {
+  color: var(--text-muted);
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tft-spotify-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tft-time {
+  font-size: 8px;
+  color: var(--text-muted);
+}
+
+.tft-time-track {
+  flex: 1;
+  height: 5px;
+  background: var(--tft-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.tft-time-fill {
+  height: 100%;
+  background: var(--accent-spotify);
+  transition: width 0.3s ease;
+}
+
+.pcb-details {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.pcb-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent-cpu);
+  letter-spacing: 0.5px;
+}
+
+.pcb-pins {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+/* Tarjetas de Control (Glassmorphism) */
+.card-glass {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card-glass-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-glass h3 {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.btn-icon {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-icon:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.form-select {
+  background: #0d1117;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.mini-stat {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.stat-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Extended Metrics */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metric-box {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.metric-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.metric-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.box-cpu .metric-title { color: var(--accent-cpu); }
+.box-gpu .metric-title { color: var(--accent-gpu); }
+.box-ram .metric-title { color: var(--accent-ram); }
+
+.metric-temp {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.metric-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.prog-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.prog-fill {
+  height: 100%;
+  transition: width 0.3s;
+}
+
+.fill-cpu { background: var(--accent-cpu); }
+.fill-gpu { background: var(--accent-gpu); }
+.fill-ram { background: var(--accent-ram); }
+
+.vram-info {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Spotify Hub */
+.spotify-hub {
+  border-color: rgba(29, 185, 84, 0.3);
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.8) 0%, rgba(29, 185, 84, 0.06) 100%);
+}
+
+.badge-spotify {
+  background: rgba(29, 185, 84, 0.15);
+  color: var(--accent-spotify);
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(29, 185, 84, 0.3);
+}
+
+.hint-text {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.btn-spotify {
+  background: var(--accent-spotify);
+  color: #000;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-spotify:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 16px rgba(29, 185, 84, 0.4);
+}
