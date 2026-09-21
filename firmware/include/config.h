@@ -42,10 +42,6 @@
 #define CARD_GPU_X         (CARD_CPU_X + CARD_WIDTH + CARD_SPACING)   // 110
 #define CARD_RAM_X         (CARD_GPU_X + CARD_WIDTH + CARD_SPACING)   // 214
 
-#define SPOTIFY_X          6
-#define SPOTIFY_Y          128
-#define SPOTIFY_WIDTH      308
-#define SPOTIFY_HEIGHT     106
 // Fila Inferior: Media Player (Izquierda) + Reloj/Fecha (Derecha)
 #define BOTTOM_Y           128
 #define BOTTOM_HEIGHT      106

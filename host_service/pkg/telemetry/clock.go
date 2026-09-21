@@ -40,4 +40,3 @@ func GetClockMetrics() models.ClockMetrics {
 		Day:  daySpa,
 	}
 }
-

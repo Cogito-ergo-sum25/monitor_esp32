@@ -315,8 +315,6 @@ body {
   text-overflow: ellipsis;
 }
 
-/* Widget Spotify TFT */
-.tft-spotify-widget {
 /* Fila Inferior: Media Player (202px) + Reloj/Fecha (98px) */
 .tft-row-bottom {
   display: flex;
@@ -336,14 +334,12 @@ body {
   justify-content: space-between;
 }
 
-.tft-spotify-header {
 .tft-media-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.tft-spotify-tag {
 .tft-media-tag {
   display: flex;
   align-items: center;
@@ -353,9 +349,6 @@ body {
   font-weight: 800;
 }
 
-.tft-spotify-badge {
-  color: var(--accent-spotify);
-  font-size: 10px;
 .tft-media-status {
   color: var(--text-muted);
   font-size: 9px;
@@ -364,7 +357,6 @@ body {
 
 .tft-song-title {
   color: #fff;
-  font-size: 15px;
   font-size: 14px;
   font-weight: 800;
   white-space: nowrap;
@@ -380,11 +372,9 @@ body {
   text-overflow: ellipsis;
 }
 
-.tft-spotify-progress {
 .tft-media-progress {
   display: flex;
   align-items: center;
-  gap: 8px;
   gap: 6px;
 }
 

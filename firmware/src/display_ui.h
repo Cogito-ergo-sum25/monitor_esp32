@@ -25,16 +25,12 @@ struct TelemetryData {
     unsigned long last_packet_time = 0;
 };
 
-struct SpotifyData {
-    String title = "Desk Dashboard";
-    String artist = "Spotify en espera (Wi-Fi)";
 struct MediaData {
     String title = "Sin reproduccion";
     String artist = "Esperando musica...";
     int progress_ms = 0;
     int duration_ms = 1000;
     bool is_playing = false;
-    bool wifi_connected = false;
 };
 
 struct ClockData {
@@ -48,8 +44,6 @@ public:
     DisplayUI(TFT_eSPI &tft);
     void begin();
     void updateTelemetry(const TelemetryData &data);
-    void updateSpotify(const SpotifyData &data);
-    void renderAll(const TelemetryData &telemetry, const SpotifyData &spotify);
     void updateMedia(const MediaData &data);
     void updateClock(const ClockData &data);
     void renderAll(const TelemetryData &telemetry, const MediaData &media, const ClockData &clock);
@@ -59,7 +53,6 @@ private:
     TFT_eSprite sprCpu;
     TFT_eSprite sprGpu;
     TFT_eSprite sprRam;
-    TFT_eSprite sprSpotify;
     TFT_eSprite sprMedia;
     TFT_eSprite sprClock;
 

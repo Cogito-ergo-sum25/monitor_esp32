@@ -90,12 +90,6 @@ function handleTelemetryUpdate(payload) {
     document.getElementById('ext-ram-total').textContent = `Total: ${ram.total.toFixed(1)} GB`;
   }
 
-  // Media (Spotify / Player)
-  if (media && media.title) {
-    document.getElementById('tft-song-title').textContent = media.title;
-    document.getElementById('tft-song-artist').textContent = media.artist || 'Artista';
-    document.getElementById('tft-spotify-status').textContent = media.is_playing ? 'PLAYING' : 'PAUSED';
-    document.getElementById('tft-spotify-status').style.color = media.is_playing ? 'var(--accent-spotify)' : 'var(--text-muted)';
   // Media (Reproductor en Vivo)
   if (media) {
     document.getElementById('tft-song-title').textContent = media.title || 'Sin reproducción';

@@ -5,7 +5,6 @@ DisplayUI::DisplayUI(TFT_eSPI &tft_ref)
       sprCpu(&tft_ref),
       sprGpu(&tft_ref),
       sprRam(&tft_ref),
-      sprSpotify(&tft_ref) {}
       sprMedia(&tft_ref),
       sprClock(&tft_ref) {}
 
@@ -24,18 +23,28 @@ void DisplayUI::begin() {
     sprRam.setColorDepth(16);
     sprRam.createSprite(CARD_WIDTH, CARD_HEIGHT);
 
-    sprSpotify.setColorDepth(16);
-    sprSpotify.createSprite(SPOTIFY_WIDTH, SPOTIFY_HEIGHT);
     sprMedia.setColorDepth(16);
     sprMedia.createSprite(MEDIA_WIDTH, MEDIA_HEIGHT);
+    void* pMedia = sprMedia.createSprite(MEDIA_WIDTH, MEDIA_HEIGHT);
 
     sprClock.setColorDepth(16);
     sprClock.createSprite(CLOCK_WIDTH, CLOCK_HEIGHT);
+    void* pClock = sprClock.createSprite(CLOCK_WIDTH, CLOCK_HEIGHT);
+
+    if (!pMedia || !pClock) {
+        Serial.printf("[WARN] High-res sprites allocation fallback. Free heap=%d\n", ESP.getFreeHeap());
+        if (!pMedia) {
+            sprMedia.setColorDepth(8);
+            sprMedia.createSprite(MEDIA_WIDTH, MEDIA_HEIGHT);
+        }
+        if (!pClock) {
+            sprClock.setColorDepth(8);
+            sprClock.createSprite(CLOCK_WIDTH, CLOCK_HEIGHT);
+        }
+    }
 
     // Dibujar pantalla inicial de bienvenida / standby
     TelemetryData initialTelemetry;
-    SpotifyData initialSpotify;
-    renderAll(initialTelemetry, initialSpotify);
     MediaData initialMedia;
     ClockData initialClock;
     renderAll(initialTelemetry, initialMedia, initialClock);
@@ -166,20 +175,11 @@ void DisplayUI::updateTelemetry(const TelemetryData &data) {
     sprRam.pushSprite(CARD_RAM_X, CARD_TOP_Y);
 }
 
-void DisplayUI::updateSpotify(const SpotifyData &spotify) {
-    sprSpotify.fillScreen(COLOR_BG);
-    sprSpotify.fillRoundRect(0, 0, SPOTIFY_WIDTH, SPOTIFY_HEIGHT, 6, COLOR_CARD_BG);
-    sprSpotify.drawRoundRect(0, 0, SPOTIFY_WIDTH, SPOTIFY_HEIGHT, 6, COLOR_CARD_BORDER);
 void DisplayUI::updateMedia(const MediaData &media) {
     sprMedia.fillScreen(COLOR_BG);
     sprMedia.fillRoundRect(0, 0, MEDIA_WIDTH, MEDIA_HEIGHT, 6, COLOR_CARD_BG);
     sprMedia.drawRoundRect(0, 0, MEDIA_WIDTH, MEDIA_HEIGHT, 6, COLOR_CARD_BORDER);
 
-    // Cabecera Spotify
-    sprSpotify.fillCircle(14, 15, 4, COLOR_SPOTIFY_GREEN);
-    sprSpotify.setTextDatum(TL_DATUM);
-    sprSpotify.setTextColor(COLOR_SPOTIFY_GREEN, COLOR_CARD_BG);
-    sprSpotify.drawString("SPOTIFY", 24, 8, 2);
     // Cabecera Media
     uint16_t statusColor = media.is_playing ? COLOR_SPOTIFY_GREEN : COLOR_TEXT_MUTED;
     sprMedia.fillCircle(12, 14, 3, statusColor);
@@ -187,82 +187,45 @@ void DisplayUI::updateMedia(const MediaData &media) {
     sprMedia.setTextColor(statusColor, COLOR_CARD_BG);
     sprMedia.drawString(media.is_playing ? "REPRODUCIENDO" : "PAUSADO", 20, 8, 2);
 
-    // Badge de estado a la derecha
-    sprSpotify.setTextDatum(TR_DATUM);
-    if (spotify.is_playing) {
-        sprSpotify.setTextColor(COLOR_SPOTIFY_GREEN, COLOR_CARD_BG);
-        sprSpotify.drawString("PLAYING", SPOTIFY_WIDTH - 12, 8, 2);
-    } else {
-        sprSpotify.setTextColor(COLOR_TEXT_MUTED, COLOR_CARD_BG);
-        sprSpotify.drawString("PAUSED", SPOTIFY_WIDTH - 12, 8, 2);
-    }
-
     // Título de la canción
-    sprSpotify.setTextDatum(TL_DATUM);
-    sprSpotify.setTextColor(COLOR_TEXT_WHITE, COLOR_CARD_BG);
-    String title = spotify.title;
-    if (title.length() > 25) {
-        title = title.substring(0, 22) + "...";
     sprMedia.setTextDatum(TL_DATUM);
     sprMedia.setTextColor(COLOR_TEXT_WHITE, COLOR_CARD_BG);
     String title = media.title;
     if (title.length() > 18) {
         title = title.substring(0, 15) + "...";
     }
-    sprSpotify.drawString(title, 12, 30, 4);
     sprMedia.drawString(title, 10, 30, 4);
 
-    // Nombre del artista
-    sprSpotify.setTextColor(COLOR_TEXT_MUTED, COLOR_CARD_BG);
-    String artist = spotify.artist;
-    if (artist.length() > 34) {
-        artist = artist.substring(0, 31) + "...";
     // Artista
     sprMedia.setTextColor(COLOR_TEXT_MUTED, COLOR_CARD_BG);
     String artist = media.artist;
     if (artist.length() > 24) {
         artist = artist.substring(0, 21) + "...";
     }
-    sprSpotify.drawString(artist, 12, 58, 2);
     sprMedia.drawString(artist, 10, 58, 2);
 
-    // Barra de reproducción y tiempos
     // Tiempos y barra de progreso
     char curTime[10], totTime[10];
-    formatTime(spotify.progress_ms, curTime, sizeof(curTime));
-    formatTime(spotify.duration_ms, totTime, sizeof(totTime));
     formatTime(media.progress_ms, curTime, sizeof(curTime));
     formatTime(media.duration_ms, totTime, sizeof(totTime));
 
-    sprSpotify.setTextDatum(TL_DATUM);
-    sprSpotify.setTextColor(COLOR_TEXT_MUTED, COLOR_CARD_BG);
-    sprSpotify.drawString(curTime, 12, 82, 1);
     sprMedia.setTextDatum(TL_DATUM);
     sprMedia.setTextColor(COLOR_TEXT_MUTED, COLOR_CARD_BG);
     sprMedia.drawString(curTime, 10, 82, 1);
 
-    int barX = 50;
-    int barW = SPOTIFY_WIDTH - 100;
-    float progressPercent = (spotify.duration_ms > 0)
-                                ? ((float)spotify.progress_ms / (float)spotify.duration_ms) * 100.0f
     int barX = 42;
     int barW = MEDIA_WIDTH - 84;
     float progressPercent = (media.duration_ms > 0)
                                 ? ((float)media.progress_ms / (float)media.duration_ms) * 100.0f
                                 : 0.0f;
-    drawProgressBar(sprSpotify, barX, 84, barW, 5, progressPercent, COLOR_SPOTIFY_GREEN);
     drawProgressBar(sprMedia, barX, 84, barW, 5, progressPercent, COLOR_SPOTIFY_GREEN);
 
-    sprSpotify.setTextDatum(TR_DATUM);
-    sprSpotify.drawString(totTime, SPOTIFY_WIDTH - 12, 82, 1);
     sprMedia.setTextDatum(TR_DATUM);
     sprMedia.drawString(totTime, MEDIA_WIDTH - 10, 82, 1);
 
-    sprSpotify.pushSprite(SPOTIFY_X, SPOTIFY_Y);
     sprMedia.pushSprite(MEDIA_X, MEDIA_Y);
 }
 
-void DisplayUI::renderAll(const TelemetryData &telemetry, const SpotifyData &spotify) {
 void DisplayUI::updateClock(const ClockData &clock) {
     sprClock.fillScreen(COLOR_BG);
     sprClock.fillRoundRect(0, 0, CLOCK_WIDTH, CLOCK_HEIGHT, 6, COLOR_CARD_BG);
@@ -291,7 +254,6 @@ void DisplayUI::updateClock(const ClockData &clock) {
 
 void DisplayUI::renderAll(const TelemetryData &telemetry, const MediaData &media, const ClockData &clock) {
     updateTelemetry(telemetry);
-    updateSpotify(spotify);
     updateMedia(media);
     updateClock(clock);
 }
