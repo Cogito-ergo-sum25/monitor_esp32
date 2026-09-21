@@ -1,0 +1,28 @@
+# PlatformIO
+.pio
+.pioenvs
+.piolibdeps
+.vscode/
+
+# Arduino
+*.hex
+*.bin
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+
+# Go
+bin/
+*.exe
+*.dll
+
+# OS / Editor
+.DS_Store
+*.swp
+*~
+

@@ -1,0 +1,29 @@
+package models
+
+// CPUMetrics representa las métricas de uso y temperatura del procesador.
+type CPUMetrics struct {
+	Usage float64 `json:"usage"`
+	Temp  float64 `json:"temp"`
+}
+
+// GPUMetrics representa las métricas de la tarjeta gráfica y memoria de video.
+type GPUMetrics struct {
+	Usage     float64 `json:"usage"`
+	Temp      float64 `json:"temp"`
+	VramUsed  float64 `json:"vram_used"`
+	VramTotal float64 `json:"vram_total"`
+}
+
+// RAMMetrics representa el uso de la memoria RAM del sistema en GB y porcentaje.
+type RAMMetrics struct {
+	Usage float64 `json:"usage"`
+	Used  float64 `json:"used"`
+	Total float64 `json:"total"`
+}
+
+// TelemetryPayload es la estructura enviada por serial en formato JSON al ESP32.
+type TelemetryPayload struct {
+	CPU CPUMetrics `json:"cpu"`
+	GPU GPUMetrics `json:"gpu"`
+	RAM RAMMetrics `json:"ram"`
+}
