@@ -24,11 +24,9 @@ void DisplayUI::begin() {
     sprRam.createSprite(CARD_WIDTH, CARD_HEIGHT);
 
     sprMedia.setColorDepth(16);
-    sprMedia.createSprite(MEDIA_WIDTH, MEDIA_HEIGHT);
     void* pMedia = sprMedia.createSprite(MEDIA_WIDTH, MEDIA_HEIGHT);
 
     sprClock.setColorDepth(16);
-    sprClock.createSprite(CLOCK_WIDTH, CLOCK_HEIGHT);
     void* pClock = sprClock.createSprite(CLOCK_WIDTH, CLOCK_HEIGHT);
 
     if (!pMedia || !pClock) {

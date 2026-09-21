@@ -16,7 +16,6 @@ unsigned long lastMediaTick = 0;
 void setup() {
     Serial.setRxBufferSize(2048);
     Serial.begin(SERIAL_BAUD_RATE);
-    Serial.setTimeout(50);
     Serial.setTimeout(250);
     delay(200);
 
