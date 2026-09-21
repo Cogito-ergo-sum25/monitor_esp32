@@ -27,6 +27,7 @@
 #define COLOR_GPU_ACCENT    0xF9A6  // Naranja / Coral eléctrico
 #define COLOR_RAM_ACCENT    0x3E18  // Verde esmeralda claro
 #define COLOR_SPOTIFY_GREEN 0x1DCB  // Verde Spotify oficial (#1db954)
+#define COLOR_CLOCK_ACCENT  0xFD20  // Ámbar / Dorado eléctrico (#ffa500)
 #define COLOR_ALERT_RED     0xF800  // Rojo para sobrecalentamiento (>85°C)
 
 // ==========================================
@@ -45,4 +46,17 @@
 #define SPOTIFY_Y          128
 #define SPOTIFY_WIDTH      308
 #define SPOTIFY_HEIGHT     106
+// Fila Inferior: Media Player (Izquierda) + Reloj/Fecha (Derecha)
+#define BOTTOM_Y           128
+#define BOTTOM_HEIGHT      106
+
+#define MEDIA_X            6
+#define MEDIA_Y            BOTTOM_Y
+#define MEDIA_WIDTH        202
+#define MEDIA_HEIGHT       BOTTOM_HEIGHT
+
+#define CLOCK_X            CARD_RAM_X                                  // 214
+#define CLOCK_Y            BOTTOM_Y
+#define CLOCK_WIDTH        CARD_WIDTH                                 // 98
+#define CLOCK_HEIGHT       BOTTOM_HEIGHT
 

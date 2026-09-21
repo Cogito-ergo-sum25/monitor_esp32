@@ -96,6 +96,16 @@ function handleTelemetryUpdate(payload) {
     document.getElementById('tft-song-artist').textContent = media.artist || 'Artista';
     document.getElementById('tft-spotify-status').textContent = media.is_playing ? 'PLAYING' : 'PAUSED';
     document.getElementById('tft-spotify-status').style.color = media.is_playing ? 'var(--accent-spotify)' : 'var(--text-muted)';
+  // Media (Reproductor en Vivo)
+  if (media) {
+    document.getElementById('tft-song-title').textContent = media.title || 'Sin reproducción';
+    document.getElementById('tft-song-artist').textContent = media.artist || 'Esperando música...';
+    document.getElementById('tft-media-status').textContent = media.is_playing ? 'PLAYING' : 'PAUSADO';
+    document.getElementById('tft-media-status').style.color = media.is_playing ? 'var(--accent-spotify)' : 'var(--text-muted)';
+    const dotMedia = document.getElementById('tft-dot-media');
+    if (dotMedia) {
+      dotMedia.style.background = media.is_playing ? 'var(--accent-spotify)' : 'var(--text-muted)';
+    }
 
     if (media.duration_ms > 0) {
       const curMin = Math.floor(media.progress_ms / 60000);
@@ -110,6 +120,19 @@ function handleTelemetryUpdate(payload) {
 
       const pct = (media.progress_ms / media.duration_ms) * 100;
       document.getElementById('tft-song-bar').style.width = `${Math.min(100, Math.max(0, pct))}%`;
+    }
+  }
+
+  // Clock (Hora y Fecha)
+  if (payload.clock) {
+    if (payload.clock.time) {
+      document.getElementById('tft-clock-time').textContent = payload.clock.time;
+    }
+    if (payload.clock.date) {
+      document.getElementById('tft-clock-date').textContent = payload.clock.date;
+    }
+    if (payload.clock.day) {
+      document.getElementById('tft-clock-day').textContent = payload.clock.day;
     }
   }
 

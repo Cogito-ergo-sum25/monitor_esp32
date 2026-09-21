@@ -317,7 +317,16 @@ body {
 
 /* Widget Spotify TFT */
 .tft-spotify-widget {
+/* Fila Inferior: Media Player (202px) + Reloj/Fecha (98px) */
+.tft-row-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
   height: 106px;
+}
+
+.tft-media-card {
+  width: 202px;
   background: var(--tft-card);
   border: 1px solid var(--tft-border);
   border-radius: 6px;
@@ -328,12 +337,17 @@ body {
 }
 
 .tft-spotify-header {
+.tft-media-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .tft-spotify-tag {
+.tft-media-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   color: var(--accent-spotify);
   font-size: 10px;
   font-weight: 800;
@@ -342,12 +356,16 @@ body {
 .tft-spotify-badge {
   color: var(--accent-spotify);
   font-size: 10px;
+.tft-media-status {
+  color: var(--text-muted);
+  font-size: 9px;
   font-weight: 800;
 }
 
 .tft-song-title {
   color: #fff;
   font-size: 15px;
+  font-size: 14px;
   font-weight: 800;
   white-space: nowrap;
   overflow: hidden;
@@ -363,9 +381,11 @@ body {
 }
 
 .tft-spotify-progress {
+.tft-media-progress {
   display: flex;
   align-items: center;
   gap: 8px;
+  gap: 6px;
 }
 
 .tft-time {
@@ -385,6 +405,52 @@ body {
   height: 100%;
   background: var(--accent-spotify);
   transition: width 0.3s ease;
+}
+
+/* Tarjeta Reloj / Fecha TFT */
+.tft-clock-card {
+  width: 98px;
+  background: var(--tft-card);
+  border: 1px solid var(--tft-border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tft-clock-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tft-clock-tag {
+  color: var(--accent-gpu);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.tft-clock-time {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.tft-clock-divider {
+  width: 80%;
+  height: 1px;
+  background: var(--tft-border);
+}
+
+.tft-clock-date {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
 }
 
 .pcb-details {

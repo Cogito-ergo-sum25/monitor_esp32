@@ -29,5 +29,6 @@ func (c *Collector) GetPayload() models.TelemetryPayload {
 		GPU:   gpuMetrics,
 		RAM:   GetRAMMetrics(),
 		Media: c.mediaMonitor.GetMediaMetrics(),
+		Clock: GetClockMetrics(),
 	}
 }

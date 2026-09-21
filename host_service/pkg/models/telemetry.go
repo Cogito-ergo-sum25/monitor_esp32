@@ -30,10 +30,18 @@ type MediaMetrics struct {
 	DurationMs int    `json:"duration_ms"`
 }
 
+// ClockMetrics representa la hora y fecha local de la PC.
+type ClockMetrics struct {
+	Time string `json:"time"`
+	Date string `json:"date"`
+	Day  string `json:"day"`
+}
+
 // TelemetryPayload es la estructura enviada por serial en formato JSON al ESP32.
 type TelemetryPayload struct {
 	CPU   CPUMetrics   `json:"cpu"`
 	GPU   GPUMetrics   `json:"gpu"`
 	RAM   RAMMetrics   `json:"ram"`
 	Media MediaMetrics `json:"media"`
+	Clock ClockMetrics `json:"clock"`
 }

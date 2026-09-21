@@ -28,10 +28,19 @@ struct TelemetryData {
 struct SpotifyData {
     String title = "Desk Dashboard";
     String artist = "Spotify en espera (Wi-Fi)";
+struct MediaData {
+    String title = "Sin reproduccion";
+    String artist = "Esperando musica...";
     int progress_ms = 0;
     int duration_ms = 1000;
     bool is_playing = false;
     bool wifi_connected = false;
+};
+
+struct ClockData {
+    String time = "--:--";
+    String date = "-- ---";
+    String day  = "RELOJ";
 };
 
 class DisplayUI {
@@ -41,6 +50,9 @@ public:
     void updateTelemetry(const TelemetryData &data);
     void updateSpotify(const SpotifyData &data);
     void renderAll(const TelemetryData &telemetry, const SpotifyData &spotify);
+    void updateMedia(const MediaData &data);
+    void updateClock(const ClockData &data);
+    void renderAll(const TelemetryData &telemetry, const MediaData &media, const ClockData &clock);
 
 private:
     TFT_eSPI &tft;
@@ -48,6 +60,8 @@ private:
     TFT_eSprite sprGpu;
     TFT_eSprite sprRam;
     TFT_eSprite sprSpotify;
+    TFT_eSprite sprMedia;
+    TFT_eSprite sprClock;
 
     void drawProgressBar(TFT_eSprite &spr, int x, int y, int w, int h, float percent, uint16_t color);
     void formatTime(int ms, char *buffer, size_t bufSize);

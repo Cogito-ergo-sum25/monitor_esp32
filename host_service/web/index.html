@@ -96,6 +96,26 @@
                 <div class="tft-spotify-header">
                   <span class="tft-spotify-tag">● SPOTIFY</span>
                   <span class="tft-spotify-badge" id="tft-spotify-status">PLAYING</span>
+              <!-- Fila Inferior: Media Player (Izquierda) + Reloj/Fecha (Derecha) -->
+              <div class="tft-row-bottom">
+                <!-- Tarjeta Media Player (202px) -->
+                <div class="tft-media-card">
+                  <div class="tft-media-header">
+                    <div class="tft-media-tag">
+                      <span class="tft-dot" id="tft-dot-media"></span>
+                      <span id="tft-media-badge">REPRODUCTOR</span>
+                    </div>
+                    <span class="tft-media-status" id="tft-media-status">PAUSADO</span>
+                  </div>
+                  <div class="tft-song-title" id="tft-song-title">Sin reproducción</div>
+                  <div class="tft-song-artist" id="tft-song-artist">Esperando música...</div>
+                  <div class="tft-media-progress">
+                    <span class="tft-time" id="tft-cur-time">00:00</span>
+                    <div class="tft-time-track">
+                      <div class="tft-time-fill" id="tft-song-bar" style="width: 0%"></div>
+                    </div>
+                    <span class="tft-time" id="tft-tot-time">00:00</span>
+                  </div>
                 </div>
                 <div class="tft-song-title" id="tft-song-title">Starboy</div>
                 <div class="tft-song-artist" id="tft-song-artist">The Weeknd, Daft Punk</div>
@@ -103,8 +123,17 @@
                   <span class="tft-time" id="tft-cur-time">01:23</span>
                   <div class="tft-time-track">
                     <div class="tft-time-fill" id="tft-song-bar" style="width: 35%"></div>
+
+                <!-- Tarjeta Reloj / Fecha (98px) -->
+                <div class="tft-clock-card">
+                  <div class="tft-clock-header">
+                    <span class="tft-clock-tag" id="tft-clock-day">HOY</span>
+                    <span class="tft-dot" style="background: var(--accent-gpu)"></span>
                   </div>
                   <span class="tft-time" id="tft-tot-time">03:50</span>
+                  <div class="tft-clock-time" id="tft-clock-time">--:--</div>
+                  <div class="tft-clock-divider"></div>
+                  <div class="tft-clock-date" id="tft-clock-date">-- ---</div>
                 </div>
               </div>
             </div>
