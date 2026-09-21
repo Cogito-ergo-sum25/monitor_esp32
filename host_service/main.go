@@ -86,6 +86,26 @@ func main() {
 		// Pausa de estabilización por si el ESP32 se reinició al abrir el puerto
 		time.Sleep(1500 * time.Millisecond)
 
+		// Goroutine para leer respuestas del ESP32 en segundo plano sin bloquear el loop
+		stopReader := make(chan struct{})
+		go func() {
+			buf := make([]byte, 256)
+			for {
+				select {
+				case <-stopReader:
+					return
+				default:
+					n, err := port.Read(buf)
+					if err != nil {
+						return
+					}
+					if n > 0 {
+						fmt.Printf("[ESP32 RX] %s", string(buf[:n]))
+					}
+				}
+			}
+		}()
+
 		// Bucle de transmisión
 		for {
 			payload := collector.GetPayload()
@@ -100,17 +120,15 @@ func main() {
 			_, err = port.Write(line)
 			if err != nil {
 				fmt.Printf("[DESCONECTADO] Error enviando datos a %s: %v\n", targetPort, err)
+				close(stopReader)
 				port.Close()
 				break
 			}
 
-			// Lectura no bloqueante de respuestas del ESP32 (debug)
-			buf := make([]byte, 256)
-			port.SetReadTimeout(50 * time.Millisecond)
-			n, _ := port.Read(buf)
-			if n > 0 {
-				fmt.Printf("[ESP32 RX] %s", string(buf[:n]))
-			}
+			fmt.Printf("[TX] CPU: %.1f%% (%.1f°C) | GPU: %.0f%% (%.0f°C) | RAM: %.1f%%\n",
+				payload.CPU.Usage, payload.CPU.Temp,
+				payload.GPU.Usage, payload.GPU.Temp,
+				payload.RAM.Usage)
 
 			time.Sleep(interval)
 		}
