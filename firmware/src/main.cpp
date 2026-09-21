@@ -64,6 +64,22 @@ void loop() {
                 telemetry.ram_used_gb  = doc["ram"]["used"]  | telemetry.ram_used_gb;
                 telemetry.ram_total_gb = doc["ram"]["total"] | telemetry.ram_total_gb;
 
+                // Lectura Media (Spotify / MPRIS en vivo)
+                if (doc["media"].is<JsonObject>()) {
+                    const char* titleStr = doc["media"]["title"];
+                    const char* artistStr = doc["media"]["artist"];
+                    if (titleStr && strlen(titleStr) > 0) {
+                        spotify.title = String(titleStr);
+                    }
+                    if (artistStr && strlen(artistStr) > 0) {
+                        spotify.artist = String(artistStr);
+                    }
+                    spotify.is_playing = doc["media"]["is_playing"] | spotify.is_playing;
+                    spotify.progress_ms = doc["media"]["progress_ms"] | spotify.progress_ms;
+                    spotify.duration_ms = doc["media"]["duration_ms"] | spotify.duration_ms;
+                    ui.updateSpotify(spotify);
+                }
+
                 telemetry.connected = true;
                 telemetry.last_packet_time = millis();
 
@@ -83,10 +99,10 @@ void loop() {
         Serial.println("[WARN] Telemetria de PC desconectada (timeout)");
     }
 
-    // 3. Simulación de avance de barra de Spotify (placeholder interactivo)
+    // 3. Avance de barra de Spotify cuando la PC esté desconectada (placeholder)
     if (millis() - lastSpotifyTick >= 1000) {
         lastSpotifyTick = millis();
-        if (spotify.is_playing) {
+        if (spotify.is_playing && !telemetry.connected) {
             spotify.progress_ms += 1000;
             if (spotify.progress_ms > spotify.duration_ms) {
                 spotify.progress_ms = 0;

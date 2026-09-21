@@ -90,6 +90,29 @@ function handleTelemetryUpdate(payload) {
     document.getElementById('ext-ram-total').textContent = `Total: ${ram.total.toFixed(1)} GB`;
   }
 
+  // Media (Spotify / Player)
+  if (media && media.title) {
+    document.getElementById('tft-song-title').textContent = media.title;
+    document.getElementById('tft-song-artist').textContent = media.artist || 'Artista';
+    document.getElementById('tft-spotify-status').textContent = media.is_playing ? 'PLAYING' : 'PAUSED';
+    document.getElementById('tft-spotify-status').style.color = media.is_playing ? 'var(--accent-spotify)' : 'var(--text-muted)';
+
+    if (media.duration_ms > 0) {
+      const curMin = Math.floor(media.progress_ms / 60000);
+      const curSec = Math.floor((media.progress_ms % 60000) / 1000);
+      const totMin = Math.floor(media.duration_ms / 60000);
+      const totSec = Math.floor((media.duration_ms % 60000) / 1000);
+
+      document.getElementById('tft-cur-time').textContent = 
+        `${curMin}:${curSec < 10 ? '0' : ''}${curSec}`;
+      document.getElementById('tft-tot-time').textContent = 
+        `${totMin}:${totSec < 10 ? '0' : ''}${totSec}`;
+
+      const pct = (media.progress_ms / media.duration_ms) * 100;
+      document.getElementById('tft-song-bar').style.width = `${Math.min(100, Math.max(0, pct))}%`;
+    }
+  }
+
   // Estado del Dispositivo Físico
   if (device) {
     if (device.connected) {
@@ -179,3 +202,4 @@ function setupEventListeners() {
     alert('Próxima Fase: El flujo OAuth de Spotify permitirá enlazar tu cuenta para sincronizar automáticamente títulos, portadas y reproductor!');
   });
 }
+

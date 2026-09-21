@@ -4,9 +4,10 @@ import (
 	"monitor-esp32-host/pkg/models"
 )
 
-// Collector orquesta la lectura de CPU, GPU y RAM en cualquier sistema operativo.
+// Collector orquesta la lectura de CPU, GPU, RAM y Media en cualquier sistema operativo.
 type Collector struct {
-	gpuMonitor GPUMonitor
+	gpuMonitor   GPUMonitor
+	mediaMonitor MediaMonitor
 }
 
 func NewCollector() *Collector {
@@ -14,7 +15,8 @@ func NewCollector() *Collector {
 	GetCPUMetrics()
 
 	return &Collector{
-		gpuMonitor: NewPlatformGPUMonitor(),
+		gpuMonitor:   NewPlatformGPUMonitor(),
+		mediaMonitor: NewPlatformMediaMonitor(),
 	}
 }
 
@@ -23,8 +25,9 @@ func (c *Collector) GetPayload() models.TelemetryPayload {
 	gpuMetrics, _ := c.gpuMonitor.GetMetrics()
 
 	return models.TelemetryPayload{
-		CPU: GetCPUMetrics(),
-		GPU: gpuMetrics,
-		RAM: GetRAMMetrics(),
+		CPU:   GetCPUMetrics(),
+		GPU:   gpuMetrics,
+		RAM:   GetRAMMetrics(),
+		Media: c.mediaMonitor.GetMediaMetrics(),
 	}
 }

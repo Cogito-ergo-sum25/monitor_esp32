@@ -21,9 +21,19 @@ type RAMMetrics struct {
 	Total float64 `json:"total"`
 }
 
+// MediaMetrics representa la información del reproductor multimedia activo (Spotify, navegador, etc.).
+type MediaMetrics struct {
+	Title      string `json:"title"`
+	Artist     string `json:"artist"`
+	IsPlaying  bool   `json:"is_playing"`
+	ProgressMs int    `json:"progress_ms"`
+	DurationMs int    `json:"duration_ms"`
+}
+
 // TelemetryPayload es la estructura enviada por serial en formato JSON al ESP32.
 type TelemetryPayload struct {
-	CPU CPUMetrics `json:"cpu"`
-	GPU GPUMetrics `json:"gpu"`
-	RAM RAMMetrics `json:"ram"`
+	CPU   CPUMetrics   `json:"cpu"`
+	GPU   GPUMetrics   `json:"gpu"`
+	RAM   RAMMetrics   `json:"ram"`
+	Media MediaMetrics `json:"media"`
 }
